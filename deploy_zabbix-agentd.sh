@@ -1,4 +1,4 @@
-ZABBIX="server" # agent or server
+ZABBIX="server" # agent, server, proxy
 
 groupadd zabbix
 useradd -m -d /opt/zabbix -s /bin/bash -g zabbix zabbix
@@ -79,7 +79,7 @@ export HISTTIMEFORMAT
 # Path Exports
 EndOfMessage
 
-######################################################################3
+######################################################################
 
 [ "$ZABBIX" == "agent" ] && ./configure --prefix=/opt/zabbix/agent --enable-agent \
 --with-libxml2 \
@@ -114,6 +114,22 @@ EndOfMessage
 --with-libpcre \
 --with-iconv
 
+[ "$ZABBIX" == "proxy" ] && ./configure --prefix=/opt/zabbix/server --enable-proxy \
+--with-postgresql \
+--with-libxml2 \
+--with-unixodbc \
+--with-net-snmp \
+--with-ssh2 \
+--with-openipmi \
+--with-zlib \
+--with-libpthread \
+--with-libevent \
+--with-openssl \
+--with-ldap \
+--with-libcurl \
+--with-libpcre \
+--with-iconv
+
 make
 make install
 
@@ -122,16 +138,20 @@ make install
 [ "$ZABBIX" == "agent" ] && mv /opt/zabbix/$ZABBIX/etc/zabbix_$AGENTD.conf /opt/zabbix/$ZABBIX/etc/zabbix_$AGENTD.conf_BACKUP
 [ "$ZABBIX" == "agent" ] && cat /opt/zabbix/$ZABBIX/etc/zabbix_$AGENTD.conf_BACKUP | grep "Default:" -A 1 | grep -v "Default:" | grep -v "\-\-" > /opt/zabbix/$ZABBIX/etc/zabbix_$AGENTD.conf
  
-[ "$ZABBIX" == "server" ] && mv /opt/zabbix/$ZABBIX/etc/zabbix_$ZABBIX.conf /opt/zabbix/$ZABBIX/etc/zabbix_$ZABBIX.conf_BACKUP
-[ "$ZABBIX" == "server" ] && cat /opt/zabbix/$ZABBIX/etc/zabbix_$ZABBIX.conf_BACKUP | grep "Default:" -A 1 | grep -v "Default:" | grep -v "\-\-" > /opt/zabbix/$ZABBIX/etc/zabbix_$ZABBIX.conf
- 
+[ "$ZABBIX" == "server" ] || [ "$ZABBIX" == "proxy" ] && mv /opt/zabbix/$ZABBIX/etc/zabbix_$ZABBIX.conf /opt/zabbix/$ZABBIX/etc/zabbix_$ZABBIX.conf_BACKUP
+[ "$ZABBIX" == "server" ] || [ "$ZABBIX" == "proxy" ] && cat /opt/zabbix/$ZABBIX/etc/zabbix_$ZABBIX.conf_BACKUP | grep "Default:" -A 1 | grep -v "Default:" | grep -v "\-\-" > /opt/zabbix/$ZABBIX/etc/zabbix_$ZABBIX.conf
+
 mkdir -p /opt/zabbix/$ZABBIX/log
 mkdir -p /opt/zabbix/$ZABBIX/tmp
+
+######################################################################
 
 chmod 750 /opt/zabbix
 
 find /opt/zabbix -mindepth 1 -exec chmod g-rwx,o-rwx {} \;
 find /opt/zabbix -exec chown -R zabbix:zabbix {} \;
 
-find /opt/zabbix/$ZABBIX -exec chmod g-rwx,o-rwx {} \;
-find /opt/zabbix/$ZABBIX -exec chown -R zabbix-$ZABBIX {} \;
+for ITEM in agent server proxy ; do 
+  find /opt/zabbix/$ITEM -exec chmod g-rwx,o-rwx {} \;
+  find /opt/zabbix/$ITEM -exec chown -R zabbix-$ITEM {} \;
+done
