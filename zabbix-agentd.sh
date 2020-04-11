@@ -76,9 +76,6 @@ export HISTTIMEFORMAT
  
 # Path Exports
 EndOfMessage
-
-mkdir -p /opt/zabbix/agent/log
-mkdir -p /opt/zabbix/agent/tmp
  
 ./configure --prefix=/opt/zabbix/agent --enable-agent \
 --with-libxml2 \
@@ -100,6 +97,9 @@ make install
  
 mv /opt/zabbix/agent/etc/zabbix_agentd.conf /opt/zabbix/agent/etc/zabbix_agentd.conf_BACKUP
 cat /opt/zabbix/agent/etc/zabbix_agentd.conf_BACKUP | grep "Default:" -A 1 | grep -v "Default:" | grep -v "\-\-" > /opt/zabbix/agent/etc/zabbix_agentd.conf
+ 
+mkdir -p /opt/zabbix/agent/log
+mkdir -p /opt/zabbix/agent/tmp
  
 find /opt/zabbix -exec chmod g-rwx,o-rwx {} \;
 find /opt/zabbix -exec chown -R zabbix:zabbix {} \;
