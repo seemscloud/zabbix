@@ -119,13 +119,14 @@ make install
 
 ######################################################################
 
-[ "$ZABBIX" == "agent" ] && AGENTD="${ZABBIX}d"
+if [ "$ZABBIX" == "agent" ] ; then
+  ZABBIX_TARGET="${ZABBIX}d"
+elif [ "$ZABBIX" == "server" ] || [ "$ZABBIX" == "proxy" ] ; then
+  ZABBIX_TARGET=$ZABBIX
+fi
 
-[ "$ZABBIX" == "agent" ] && mv /opt/zabbix/$ZABBIX/etc/zabbix_$AGENTD.conf /opt/zabbix/$ZABBIX/etc/zabbix_$AGENTD.conf_BACKUP
-[ "$ZABBIX" == "agent" ] && cat /opt/zabbix/$ZABBIX/etc/zabbix_$AGENTD.conf_BACKUP | grep "Default:" -A 1 | grep -v "Default:" | grep -v "\-\-" > /opt/zabbix/$ZABBIX/etc/zabbix_$AGENTD.conf
- 
-[ "$ZABBIX" == "server" ] || [ "$ZABBIX" == "proxy" ] && mv /opt/zabbix/$ZABBIX/etc/zabbix_$ZABBIX.conf /opt/zabbix/$ZABBIX/etc/zabbix_$ZABBIX.conf_BACKUP
-[ "$ZABBIX" == "server" ] || [ "$ZABBIX" == "proxy" ] && cat /opt/zabbix/$ZABBIX/etc/zabbix_$ZABBIX.conf_BACKUP | grep "Default:" -A 1 | grep -v "Default:" | grep -v "\-\-" > /opt/zabbix/$ZABBIX/etc/zabbix_$ZABBIX.conf
+mv /opt/zabbix/$ZABBIX/etc/zabbix_$ZABBIX_TARGET.conf /opt/zabbix/$ZABBIX/etc/zabbix_$ZABBIX_TARGET.conf_BACKUP
+cat /opt/zabbix/$ZABBIX/etc/zabbix_$ZABBIX_TARGET.conf_BACKUP | grep "Default:" -A 1 | grep -v "Default:" | grep -v "\-\-" > /opt/zabbix/$ZABBIX/etc/zabbix_$ZABBIX_TARGET.conf
 
 mkdir -p /opt/zabbix/$ZABBIX/log
 mkdir -p /opt/zabbix/$ZABBIX/tmp
