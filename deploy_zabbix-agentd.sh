@@ -78,8 +78,10 @@ export HISTTIMEFORMAT
  
 # Path Exports
 EndOfMessage
- 
-./configure --prefix=/opt/zabbix/$ZABBIX --enable-$ZABBIX \
+
+######################################################################3
+
+[ "$ZABBIX" == "agent" ] && ./configure --prefix=/opt/zabbix/agent --enable-agent \
 --with-libxml2 \
 --with-unixodbc \
 --with-net-snmp \
@@ -94,11 +96,32 @@ EndOfMessage
 --with-libpcre \
 --with-iconv
  
+ # or
+ 
+[ "$ZABBIX" == "server" ] && ./configure --prefix=/opt/zabbix/server --enable-server \
+--with-postgresql \
+--with-libxml2 \
+--with-unixodbc \
+--with-net-snmp \
+--with-ssh2 \
+--with-openipmi \
+--with-zlib \
+--with-libpthread \
+--with-libevent \
+--with-openssl \
+--with-ldap \
+--with-libcurl \
+--with-libpcre \
+--with-iconv
+
 make
 make install
  
-mv /opt/zabbix/$ZABBIX/etc/zabbix_$ZABBIXd.conf /opt/zabbix/$ZABBIX/etc/zabbix_$ZABBIXd.conf_BACKUP
-cat /opt/zabbix/$ZABBIX_USER/etc/zabbix_$ZABBIXd.conf_BACKUP | grep "Default:" -A 1 | grep -v "Default:" | grep -v "\-\-" > /opt/zabbix/$ZABBIX/etc/zabbix_$ZABBIXd.conf
+[ "$ZABBIX" == "agent" ] && mv /opt/zabbix/$ZABBIX/etc/zabbix_$ZABBIXd.conf /opt/zabbix/$ZABBIX/etc/zabbix_$ZABBIXd.conf_BACKUP
+[ "$ZABBIX" == "agent" ] cat /opt/zabbix/$ZABBIX_USER/etc/zabbix_$ZABBIXd.conf_BACKUP | grep "Default:" -A 1 | grep -v "Default:" | grep -v "\-\-" > /opt/zabbix/$ZABBIX/etc/zabbix_$ZABBIXd.conf
+ 
+[ "$ZABBIX" == "server" ] && mv /opt/zabbix/$ZABBIX/etc/zabbix_$ZABBIX.conf /opt/zabbix/$ZABBIX/etc/zabbix_$ZABBIX.conf_BACKUP
+[ "$ZABBIX" == "server" ] cat /opt/zabbix/$ZABBIX_USER/etc/zabbix_$ZABBIX.conf_BACKUP | grep "Default:" -A 1 | grep -v "Default:" | grep -v "\-\-" > /opt/zabbix/$ZABBIX/etc/zabbix_$ZABBIX.conf
  
 mkdir -p /opt/zabbix/$ZABBIX/log
 mkdir -p /opt/zabbix/$ZABBIX/tmp
@@ -107,4 +130,4 @@ find /opt/zabbix -exec chmod g-rwx,o-rwx {} \;
 find /opt/zabbix -exec chown -R zabbix:zabbix {} \;
 
 find /opt/zabbix/$ZABBIX -exec chmod g-rwx,o-rwx {} \;
-find /opt/zabbix/$ZABBIX -exec chown -R zabbix-$ZABBIXzabbix {} \;
+find /opt/zabbix/$ZABBIX -exec chown -R zabbix-$ZABBIX {} \;
