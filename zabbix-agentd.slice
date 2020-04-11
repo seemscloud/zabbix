@@ -1,0 +1,16 @@
+ cat > /etc/systemd/system/zabbix-agentd.slice << 'EndOfMessage'
+[Slice]
+MemoryAccounting=true
+MemoryLimit=1024M
+MemoryHigh=1024M
+MemoryMax=1152G
+CPUQuota=250%
+EndOfMessage
+
+chmod 644 /etc/systemd/system/zabbix-agentd.slice
+ 
+systemctl daemon-reload
+ 
+systemctl stop zabbix-agentd.slice
+systemctl start zabbix-agentd.slice
+systemctl status zabbix-agentd.slice
