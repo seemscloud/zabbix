@@ -40,7 +40,7 @@ export HISTTIMEFORMAT
 # Path Exports
 EndOfMessage
 
-useradd -m -d /opt/zabbix/$ZABBIX_ -s /bin/bash -g zabbix zabbix-$ZABBIX
+useradd -m -d /opt/zabbix/$ZABBIX -s /bin/bash -g zabbix zabbix-$ZABBIX
 
 cat >/opt/zabbix/$ZABBIX/.bash_profile << 'EndOfMessage'
 # Sources
