@@ -7,8 +7,8 @@ WHERE itemid = (
     WHERE hostid = (
         SELECT hostid
         FROM hosts
-        WHERE host = 'd-xcr-rr-pte1.irgit.in')
-      AND name = 'Service Package CCP Status')
+        WHERE host = 'example.localdomain')
+      AND name = 'Service CCP Status')
 ORDER BY clock DESC;
  
 -- Trends for Specified Host
@@ -20,8 +20,8 @@ WHERE itemid = (
     WHERE hostid = (
         SELECT hostid
         FROM hosts
-        WHERE host = 't-xcr-pte1.irgit.in')
-      AND name = 'Service Package CCP Status')
+        WHERE host = 'texample.localdomain')
+      AND name = 'Service CCP Status')
 ORDER BY clock DESC;
  
 --
@@ -35,7 +35,7 @@ FROM items
 WHERE hostid = (
     SELECT hostid
     FROM hosts
-    WHERE host = 'd-xcr-rr-dbptr1.irgit.in');
+    WHERE host = 'example.localdomain');
  
 -- Match Groups to Hosts
 SELECT H.name "Name", I.dns "DNS", I.ip "IP", I.port "Port", H.host, G.name "Group Name"
@@ -58,7 +58,7 @@ WHERE S.userid = U.userid
   AND S.userid = (
     SELECT userid
     FROM users
-    WHERE alias = 'mkatana');
+    WHERE alias = 'administrator');
  
 -- Match User and Group
 SELECT U.alias, U.name, U.surname, U.passwd, G.name
