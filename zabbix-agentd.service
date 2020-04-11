@@ -1,0 +1,29 @@
+cat > /etc/systemd/system/zabbix-agentd.service << 'EndOfMessage'
+[Unit]
+Description=Zabbix Agent
+After=syslog.target network.target network-online.target
+Wants=network.target network-online.target
+ 
+[Service]
+Environment="CONFFILE=/opt/zabbix/agent/etc/zabbix_agentd.conf"
+Type=forking
+Restart=on-failure
+Slice=zabbix-agentd.slice
+User=zabbix-agent
+PIDFile=/opt/zabbix/agent/tmp/zabbix_agentd.pid
+KillMode=control-group
+ExecStart=/opt/zabbix/agent/sbin/zabbix_agentd -c $CONFFILE
+ExecStop=/bin/kill -SIGTERM $MAINPID
+RestartSec=10s
+ 
+[Install]
+WantedBy=multi-user.target
+EndOfMessage
+
+chmod 644 /etc/systemd/system/zabbix-agentd.service
+ 
+systemctl daemon-reload
+ 
+systemctl stop zabbix-agentd.service
+systemctl start zabbix-agentd.service
+systemctl status zabbix-agentd.service
