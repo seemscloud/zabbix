@@ -133,7 +133,5 @@ chmod 750 /opt/zabbix
 find /opt/zabbix -mindepth 1 -exec chmod g-rwx,o-rwx {} \;
 find /opt/zabbix -exec chown -R zabbix:zabbix {} \;
 
-chmod 750 /opt/zabbix/$ZABBIX
-
-find /opt/zabbix/$ZABBIX -mindepth 1 -exec chmod g-rwx,o-rwx {} \;
+find /opt/zabbix/$ZABBIX -exec chmod g-rwx,o-rwx {} \;
 find /opt/zabbix/$ZABBIX -exec chown -R zabbix-$ZABBIX {} \;
