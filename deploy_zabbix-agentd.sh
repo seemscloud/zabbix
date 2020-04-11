@@ -98,23 +98,7 @@ EndOfMessage
  
  # or
  
-[ "$ZABBIX" == "server" ] && ./configure --prefix=/opt/zabbix/server --enable-server \
---with-postgresql \
---with-libxml2 \
---with-unixodbc \
---with-net-snmp \
---with-ssh2 \
---with-openipmi \
---with-zlib \
---with-libpthread \
---with-libevent \
---with-openssl \
---with-ldap \
---with-libcurl \
---with-libpcre \
---with-iconv
-
-[ "$ZABBIX" == "proxy" ] && ./configure --prefix=/opt/zabbix/server --enable-proxy \
+[ "$ZABBIX" == "server" ] || [ "$ZABBIX" == "proxy" ] && ./configure --prefix=/opt/zabbix/server --enable-$ZABBIX \
 --with-postgresql \
 --with-libxml2 \
 --with-unixodbc \
@@ -133,6 +117,8 @@ EndOfMessage
 make
 make install
 
+######################################################################
+
 [ "$ZABBIX" == "agent" ] && AGENTD="${ZABBIX}d"
 
 [ "$ZABBIX" == "agent" ] && mv /opt/zabbix/$ZABBIX/etc/zabbix_$AGENTD.conf /opt/zabbix/$ZABBIX/etc/zabbix_$AGENTD.conf_BACKUP
@@ -143,8 +129,6 @@ make install
 
 mkdir -p /opt/zabbix/$ZABBIX/log
 mkdir -p /opt/zabbix/$ZABBIX/tmp
-
-######################################################################
 
 chmod 750 /opt/zabbix
 
