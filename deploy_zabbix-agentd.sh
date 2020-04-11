@@ -1,4 +1,4 @@
-ZABBIX="agent" # agent or server
+ZABBIX="server" # agent or server
 
 groupadd zabbix
 useradd -m -d /opt/zabbix -s /bin/bash -g zabbix zabbix
