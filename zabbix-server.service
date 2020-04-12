@@ -1,0 +1,29 @@
+cat > /etc/systemd/system/zabbix-server.service << 'EndOfMessage'
+[Unit]
+Description=Zabbix Server
+After=syslog.target network.target network-online.target
+Wants=network.target network-online.target
+ 
+[Service]
+Environment="CONFFILE=/opt/zabbix/server/etc/zabbix_aerver.conf"
+Type=forking
+Restart=on-failure
+Slice=zabbix-server.slice
+User=zabbix-server
+PIDFile=/opt/zabbix/server/tmp/zabbix_server.pid
+KillMode=control-group
+ExecStart=/opt/zabbix/server/sbin/zabbix_server -c $CONFFILE
+ExecStop=/bin/kill -SIGTERM $MAINPID
+RestartSec=10s
+ 
+[Install]
+WantedBy=multi-user.target
+EndOfMessage
+
+chmod 644 /etc/systemd/system/zabbix-server.service
+ 
+systemctl daemon-reload
+ 
+systemctl stop zabbix-server.service
+systemctl start zabbix-server.service
+systemctl status zabbix-server.service
