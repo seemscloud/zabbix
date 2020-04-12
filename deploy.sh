@@ -83,7 +83,7 @@ EndOfMessage
 
 ######################################################################
 
-[ "$ZABBIX" == "agent" ] && ./configure --prefix=/opt/zabbix/agent --enable-agent \
+[ "$ZABBIX" == "agent" ] && ./configure --prefix=/opt/zabbix/$ZABBIX --enable-$ZABBIX \
 --with-libxml2 \
 --with-unixodbc \
 --with-net-snmp \
@@ -100,7 +100,7 @@ EndOfMessage
  
  # or
  
-[ "$ZABBIX" == "server" ] || [ "$ZABBIX" == "proxy" ] && ./configure --prefix=/opt/zabbix/server --enable-$ZABBIX \
+[ "$ZABBIX" == "server" ] || [ "$ZABBIX" == "proxy" ] && ./configure --prefix=/opt/zabbix/$ZABBIX --enable-$ZABBIX \
 --with-postgresql \
 --with-libxml2 \
 --with-unixodbc \
