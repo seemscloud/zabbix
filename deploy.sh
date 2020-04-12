@@ -2,6 +2,10 @@ ZABBIX=server
 # ZABBIX=agent
 # ZABBIX=proxy
 
+ZABBIX_AGENT=zabbix_agent
+ZABBIX_PROXY=zabbix_proxy
+ZABBIX_SERVER=zabbix_server
+
 groupadd zabbix
 useradd -m -d /opt/zabbix -s /bin/bash -g zabbix zabbix
 
@@ -83,7 +87,7 @@ EndOfMessage
 
 ######################################################################
 
-[ "$ZABBIX" == "agent" ] && ./configure --prefix=/opt/zabbix/$ZABBIX --enable-$ZABBIX \
+[ "$ZABBIX" == "$ZABBIX_AGENT" ] && ./configure --prefix=/opt/zabbix/$ZABBIX --enable-$ZABBIX \
 --with-libxml2 \
 --with-unixodbc \
 --with-net-snmp \
@@ -100,7 +104,7 @@ EndOfMessage
  
  # or
  
-[ "$ZABBIX" == "server" ] || [ "$ZABBIX" == "proxy" ] && ./configure --prefix=/opt/zabbix/$ZABBIX --enable-$ZABBIX \
+[ "$ZABBIX" == "$ZABBIX_SERVER" ] || [ "$ZABBIX" == "$ZABBIX_PROXY" ] && ./configure --prefix=/opt/zabbix/$ZABBIX --enable-$ZABBIX \
 --with-postgresql \
 --with-libxml2 \
 --with-unixodbc \
@@ -121,9 +125,9 @@ make install
 
 ######################################################################
 
-if [ "$ZABBIX" == "agent" ] ; then
+if [ "$ZABBIX" == "$ZABBIX_AGENT" ] ; then
   ZABBIX_TARGET="${ZABBIX}d"
-elif [ "$ZABBIX" == "server" ] || [ "$ZABBIX" == "proxy" ] ; then
+elif [ "$ZABBIX" == "$ZABBIX_SERVER" ] || [ "$ZABBIX" == "ZABBIX_PROXY" ] ; then
   ZABBIX_TARGET=$ZABBIX
 fi
 
@@ -138,7 +142,7 @@ chmod 750 /opt/zabbix
 find /opt/zabbix -mindepth 1 -exec chmod g-rwx,o-rwx {} \;
 find /opt/zabbix -exec chown -R zabbix:zabbix {} \;
 
-for ITEM in agent server proxy ; do 
+for ITEM in $ZABBIX_AGENT $ZABBIX_SERVER $ZABBIX_PROXY ; do 
   find /opt/zabbix/$ITEM -exec chmod g-rwx,o-rwx {} \;
   find /opt/zabbix/$ITEM -exec chown -R zabbix-$ITEM {} \;
 done
